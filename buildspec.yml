@@ -9,7 +9,8 @@ phases:
       - npm install
   build:
     commands:
-      - sls deploy -s dev
+      - cd novavolt-energyusage
+      - sls deploy -s qa
 artifacts:
   files:
     - '**/*'
