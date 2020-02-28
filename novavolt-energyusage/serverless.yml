@@ -1,7 +1,11 @@
-service: novavolt-energyUsage
+# name of the service
+service: novavolt-energy-usage-${self:provider.stage}-${git:branch}
 
+# variables section
 custom:
   stage: ${opt:stage, self:provider.stage}
+  branch: ${git:branch}
+
 
 provider:
   name: aws
@@ -13,14 +17,18 @@ provider:
      Action:
        - "s3:*"
      Resource: "*"
+  -  Effect: "Allow"
+     Action:
+       - "sqs:*"
+     Resource: "*"
 
+# Lambda function
 functions:
   getMsg:
     handler: handler.hello
-    name: ${self:provider.stage}-${self:service}-hello
+    name: ${self:service}-hello
     events:
       - http: GET /
-# you can add statements to the Lambda function's IAM Role here
     iamRoleStatements:
       - Effect: "Allow"
         Action:
@@ -30,10 +38,31 @@ functions:
         Action:
           - "s3:PutObject"
         Resource: !Ref novavoltEnergyUsageBucket
+      - Effect: "Allow"
+        Action:
+          - "sqs:*"
+        Resource: !Ref novavoltEnergyUsageInQueue
+      - Effect: "Allow"
+        Action:
+          - "sqs:*"
+        Resource: !Ref novavoltEnergyUsageOutQueue
 
+# use plugins (for example to having access to git values (like the branch))
+plugins:
+  - serverless-plugin-git-variables
+
+# Resources section to specify other resources in CloudFormation style
 resources:
   Resources:
     novavoltEnergyUsageBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: novavolt-energy-usage-bucket
+        BucketName: ${self:service}-bucket
+    novavoltEnergyUsageInQueue:
+      Type: AWS::SQS::Queue
+      Properties: 
+        QueueName: ${self:service}-incoming-queue
+    novavoltEnergyUsageOutQueue:
+      Type: AWS::SQS::Queue
+      Properties: 
+        QueueName: ${self:service}-outgoing-queue
