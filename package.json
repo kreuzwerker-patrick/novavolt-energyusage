@@ -4,7 +4,7 @@
   "description": "# basic setup",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha */test/*.js"
   },
   "repository": {
     "type": "git",
@@ -15,6 +15,7 @@
   "dependencies": {
     "serverless": "1.*",
     "serverless-offline": "5.*",
+    "serverless-mocha-plugin": "1.*", 
     "serverless-plugin-git-variables": "3.*",
     "serverless-plugin-ifelse": "1.*"
   },
