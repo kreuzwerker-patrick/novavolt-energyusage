@@ -1,0 +1,24 @@
+{
+  "name": "novavolt-energyusage",
+  "version": "1.0.0",
+  "description": "# basic setup",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kreuzwerker-patrick/novavolt-energyusage.git"
+  },
+  "author": "kreuzwerker Switzerland AG",
+  "license": "ISC",
+  "dependencies": {
+    "serverless": "1.*",
+    "serverless-offline": "5.*",
+    "serverless-plugin-git-variables": "3.*"
+  },
+  "bugs": {
+    "url": "https://github.com/kreuzwerker-patrick/novavolt-energyusage/issues"
+  },
+  "homepage": "https://github.com/kreuzwerker-patrick/novavolt-energyusage#readme"
+}
