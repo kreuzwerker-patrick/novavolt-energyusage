@@ -1,0 +1,116 @@
+# name of the service
+service: novavolt-energy-usage-${self:provider.stage}-${git:branch}
+
+# variables section
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  branch: ${git:branch}
+
+
+provider:
+  name: aws
+  stackName: ${self:service}-stack 
+  apiName: ${self:service}-api
+  runtime: nodejs10.x
+  stage: ${opt:stage, env:AWS_STAGE, 'dev'}
+  region: eu-central-1
+  stackTags:
+    customer: NovaVolt
+    user: ${git:branch}
+  iamRoleStatements:
+  -  Effect: "Allow"
+     Action:
+       - "s3:*"
+     Resource: "*"
+  -  Effect: "Allow"
+     Action:
+       - "sqs:*"
+     Resource: "*"
+
+# Lambda function
+functions:
+  getZapCloudData:
+    handler: get-data-zapcloud.getData
+    name: ${self:service}-get-data-zapcloud
+    events:
+      - http: GET /getData/zapCloud
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "s3:ListBucket"
+        Resource: !Ref novavoltEnergyUsageBucket
+      - Effect: "Allow"
+        Action:
+          - "s3:PutObject"
+        Resource: !Ref novavoltEnergyUsageBucket
+      - Effect: "Allow"
+        Action:
+          - "sqs:*"
+        Resource: !Ref novavoltEnergyUsageInQueue
+  translateData:
+    handler: translate-data.translateData
+    name: ${self:service}-translate-data
+    events:
+      - http: GET /translateData
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "s3:ListBucket"
+        Resource: !Ref novavoltEnergyUsageBucket
+      - Effect: "Allow"
+        Action:
+          - "s3:PutObject"
+        Resource: !Ref novavoltEnergyUsageBucket
+      - Effect: "Allow"
+        Action:
+          - "sqs:*"
+        Resource: !Ref novavoltEnergyUsageInQueue
+      - Effect: "Allow"
+        Action:
+          - "sqs:*"
+        Resource: !Ref novavoltEnergyUsageOutQueue
+# for step2 - the transfer section of the project -- not yet enabled
+#  transport-ise:
+#    handler: handler.getData
+#    name: ${self:service}-transport-ise
+#    events:
+#      - http: GET /
+#    iamRoleStatements:
+#      - Effect: "Allow"
+#        Action:
+#          - "s3:ListBucket"
+#        Resource: !Ref novavoltEnergyUsageBucket
+#      - Effect: "Allow"
+#        Action:
+#          - "s3:PutObject"
+#        Resource: !Ref novavoltEnergyUsageBucket
+#      - Effect: "Allow"
+#        Action:
+#          - "sqs:*"
+#        Resource: !Ref novavoltEnergyUsageOutQueue
+  customerConfig:
+    handler: customer-config.getCustomerConfig
+    name: ${self:service}-customer-config
+    events:
+      - http: GET /customer/config
+
+
+# use plugins (for example to having access to git values (like the branch))
+plugins:
+  - serverless-plugin-git-variables
+
+# Resources section to specify other resources in CloudFormation style
+resources:
+  Resources:
+    novavoltEnergyUsageBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:service}-bucket
+    novavoltEnergyUsageInQueue:
+      Type: AWS::SQS::Queue
+      Properties: 
+        QueueName: ${self:service}-incoming-queue
+    novavoltEnergyUsageOutQueue:
+      Type: AWS::SQS::Queue
+      Properties: 
+        QueueName: ${self:service}-outgoing-queue
