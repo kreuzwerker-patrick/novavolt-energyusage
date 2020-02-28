@@ -1,7 +1,7 @@
-org: patrickriegler
+#org: patrickriegler
 
-tenant: novavolt 
-app: novavolt-energyusage
+#tenant: novavolt 
+#app: novavolt-energyusage
 # name of the service
 service: novavolt-energy-usage-${self:custom.stage}-${self:custom.branch.${self:custom.stage}, ${self:custom.stage}}
 # frameworkVersion: ">=1.44.0"
