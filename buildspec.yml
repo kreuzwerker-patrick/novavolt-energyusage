@@ -5,11 +5,12 @@ phases:
     runtime-versions:
       nodejs: 10
     commands:
-      - npm install -g
+      - npm install serverless -g
+      - npm install 
   build:
     commands:
       - cd novavolt-energyusage
-      - sls deploy -s qa
+      - sls deploy --stage qa -v
 artifacts:
   files:
     - '**/*'
