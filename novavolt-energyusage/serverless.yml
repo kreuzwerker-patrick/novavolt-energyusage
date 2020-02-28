@@ -9,6 +9,8 @@ custom:
 
 provider:
   name: aws
+  stackName: ${self:service}-stack 
+  apiName: ${self:service}-api
   runtime: nodejs10.x
   stage: ${opt:stage, env:AWS_STAGE, 'dev'}
   region: eu-central-1
@@ -28,7 +30,7 @@ functions:
     handler: get-data-zapcloud.getData
     name: ${self:service}-get-data-zapcloud
     events:
-      - http: GET /
+      - http: GET /getData/zapCloud
     iamRoleStatements:
       - Effect: "Allow"
         Action:
@@ -46,7 +48,7 @@ functions:
     handler: translate-data.translateData
     name: ${self:service}-translate-data
     events:
-      - http: GET /
+      - http: GET /translateData
     iamRoleStatements:
       - Effect: "Allow"
         Action:
@@ -83,11 +85,11 @@ functions:
 #        Action:
 #          - "sqs:*"
 #        Resource: !Ref novavoltEnergyUsageOutQueue
-#  customerConfig:
-#    handler: customer-config.getCustomerConfig
-#    name: ${self:service}-customer-config
-#    events:
-#      - http: GET /
+  customerConfig:
+    handler: customer-config.getCustomerConfig
+    name: ${self:service}-customer-config
+    events:
+      - http: GET /customer/config
 
 
 # use plugins (for example to having access to git values (like the branch))
