@@ -1,19 +1,24 @@
 # name of the service
-service: novavolt-energy-usage-${self:custom.stage}-${self:custom.branch}
+service: novavolt-energy-usage-${self:custom.stage}-${self:custom.branch.${self:custom.stage}, ${self:custom.stage}}
 
 # variables section
 custom:
   stage: ${opt:stage, env:AWS_STAGE, 'dev'}
-  serverlessIfElse:
-    - If: '"${self:custom.stage}" == "prod"'
-      Set:
-        branch: prod
-    - If: '"${self:custom.stage}" == "qa"'
-      Set:
-        branch: qa
-    - If: '"${self:custom.stage}" == "dev"'
-      Set:
-        branch: ${git:branch}
+  branch:
+    prod: prod
+    qa: qa
+    dev: ${git:branch}
+# the following section "serverlessIfElse" cannot be used for custom variables, but well for disabling or enabling services depending on the stage
+#  serverlessIfElse:
+#    - If: '"${self:custom.stage}" == "prod"'
+#      Set:
+#        branch: prod
+#    - If: '"${self:custom.stage}" == "qa"'
+#      Set:
+#        branch: qa
+#    - If: '"${self:custom.stage}" == "dev"'
+#      Set:
+#        branch: ${git:branch}
 
 
 provider:
@@ -25,7 +30,7 @@ provider:
   region: eu-central-1
   stackTags:
     customer: NovaVolt
-    user: ${self:custom.branch}
+    user: ${self:custom.branch.${self:custom.stage}, ${self:custom.stage}}
   iamRoleStatements:
   -  Effect: "Allow"
      Action:
