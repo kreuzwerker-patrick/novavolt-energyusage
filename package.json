@@ -15,7 +15,8 @@
   "dependencies": {
     "serverless": "1.*",
     "serverless-offline": "5.*",
-    "serverless-plugin-git-variables": "3.*"
+    "serverless-plugin-git-variables": "3.*",
+    "serverless-plugin-ifelse": "1.*"
   },
   "bugs": {
     "url": "https://github.com/kreuzwerker-patrick/novavolt-energyusage/issues"
