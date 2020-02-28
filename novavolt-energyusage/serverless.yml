@@ -24,9 +24,9 @@ provider:
 
 # Lambda function
 functions:
-  getMsg:
-    handler: handler.hello
-    name: ${self:service}-hello
+  getZapCloudData:
+    handler: get-data-zapcloud.getData
+    name: ${self:service}-get-data-zapcloud
     events:
       - http: GET /
     iamRoleStatements:
@@ -42,10 +42,50 @@ functions:
         Action:
           - "sqs:*"
         Resource: !Ref novavoltEnergyUsageInQueue
-      - Effect: "Allow"
-        Action:
-          - "sqs:*"
-        Resource: !Ref novavoltEnergyUsageOutQueue
+#  translateData:
+#    handler: handler.getData
+#    name: ${self:service}-translate-data
+#    events:
+#      - http: GET /
+#    iamRoleStatements:
+#      - Effect: "Allow"
+#        Action:
+#          - "s3:ListBucket"
+#        Resource: !Ref novavoltEnergyUsageBucket
+#      - Effect: "Allow"
+#        Action:
+#          - "s3:PutObject"
+#        Resource: !Ref novavoltEnergyUsageBucket
+#      - Effect: "Allow"
+#        Action:
+#          - "sqs:*"
+#        Resource: !Ref novavoltEnergyUsageInQueue
+#      - Effect: "Allow"
+#        Action:
+#          - "sqs:*"
+#        Resource: !Ref novavoltEnergyUsageOutQueue
+#  transport-ise:
+#    handler: handler.getData
+#    name: ${self:service}-transport-ise
+#    events:
+#      - http: GET /
+#    iamRoleStatements:
+#      - Effect: "Allow"
+#        Action:
+#          - "s3:ListBucket"
+#        Resource: !Ref novavoltEnergyUsageBucket
+#      - Effect: "Allow"
+#        Action:
+#          - "s3:PutObject"
+#        Resource: !Ref novavoltEnergyUsageBucket
+#      - Effect: "Allow"
+#        Action:
+#          - "sqs:*"
+#        Resource: !Ref novavoltEnergyUsageInQueue
+#      - Effect: "Allow"
+#        Action:
+#          - "sqs:*"
+#        Resource: !Ref novavoltEnergyUsageOutQueue
 
 # use plugins (for example to having access to git values (like the branch))
 plugins:
