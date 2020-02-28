@@ -9,7 +9,7 @@ phases:
       - npm install
   build:
     commands:
-      - sls deploy -s qa
+      - sls deploy -s dev
 artifacts:
   files:
     - '**/*'
