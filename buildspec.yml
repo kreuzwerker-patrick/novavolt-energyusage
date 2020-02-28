@@ -10,7 +10,7 @@ phases:
   build:
     commands:
       - cd novavolt-energyusage
-      - sls deploy --stage qa -v
+      - sls update --stage qa -v
 artifacts:
   files:
     - '**/*'
