@@ -42,28 +42,28 @@ functions:
         Action:
           - "sqs:*"
         Resource: !Ref novavoltEnergyUsageInQueue
-#  translateData:
-#    handler: handler.getData
-#    name: ${self:service}-translate-data
-#    events:
-#      - http: GET /
-#    iamRoleStatements:
-#      - Effect: "Allow"
-#        Action:
-#          - "s3:ListBucket"
-#        Resource: !Ref novavoltEnergyUsageBucket
-#      - Effect: "Allow"
-#        Action:
-#          - "s3:PutObject"
-#        Resource: !Ref novavoltEnergyUsageBucket
-#      - Effect: "Allow"
-#        Action:
-#          - "sqs:*"
-#        Resource: !Ref novavoltEnergyUsageInQueue
-#      - Effect: "Allow"
-#        Action:
-#          - "sqs:*"
-#        Resource: !Ref novavoltEnergyUsageOutQueue
+  translateData:
+    handler: translate-data.translateData
+    name: ${self:service}-translate-data
+    events:
+      - http: GET /
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "s3:ListBucket"
+        Resource: !Ref novavoltEnergyUsageBucket
+      - Effect: "Allow"
+        Action:
+          - "s3:PutObject"
+        Resource: !Ref novavoltEnergyUsageBucket
+      - Effect: "Allow"
+        Action:
+          - "sqs:*"
+        Resource: !Ref novavoltEnergyUsageInQueue
+      - Effect: "Allow"
+        Action:
+          - "sqs:*"
+        Resource: !Ref novavoltEnergyUsageOutQueue
 #  transport-ise:
 #    handler: handler.getData
 #    name: ${self:service}-transport-ise
