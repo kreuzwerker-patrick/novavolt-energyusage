@@ -117,7 +117,7 @@ functions:
 # use plugins (for example to having access to git values (like the branch))
 plugins:
   - serverless-plugin-git-variables
-#  - serverless-mocha-plugin
+  - serverless-mocha-plugin
 
 # Resources section to specify other resources in CloudFormation style
 resources:
